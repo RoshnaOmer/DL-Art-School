@@ -80,8 +80,59 @@ def transliteration_cleaners(text):
   return text
 
 
+# List of (regular expression, replacement) pairs for abbreviations:
+_ckb_transliterate = [(re.compile('\\b%s\\.' % x[0], re.IGNORECASE), x[1]) for x in [
+('ؤ','o'),
+('ئ','eh'),
+('ا','aa'),
+('ب','b'),
+('ت','t'),
+('ث','th'),
+('ج','j'),
+('ح','he'),
+('خ','kh'),
+('د','d'),
+('ر','r'),
+('ز','z'),
+('س','s'),
+('ش','sh'),
+('ع','a\''),
+('غ','gh'),
+('ف','f'),
+('ق','q'),
+('ك','k'),
+('ل','l'),
+('م','m'),
+('ن','n'),
+('ه','eh'),
+('و','oo'),
+('ى','ee'),
+('ي','ee'),
+('پ','p'),
+('چ','ch'),
+('ڕ','rr'),
+('ژ','zh'),
+('ڤ','v'),
+('ک','k'),
+('گ','g'),
+('ڵ','ll'),
+('ھ','h'),
+('ۆ','o'),
+('ی','y'),
+('ێ','y'),
+('ە','eh')
+]]
+
+
+def ckb_transliterate(text):
+  for regex, replacement in _ckb_transliterate:
+    text = re.sub(regex, replacement, text)
+  return text
+
+
 def english_cleaners(text):
   '''Pipeline for English text, including number and abbreviation expansion.'''
+  text = ckb_transliterate(text)
   text = convert_to_ascii(text)
   text = lowercase(text)
   text = expand_numbers(text)
